@@ -4,10 +4,12 @@ on:
   push:
     branches: [main, master]
   pull_request:
+  release:
+    types: [published]
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -44,3 +46,12 @@ jobs:
           name: elrs-dongle-stub-debug-apk
           path: android-stub/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
+
+      - name: Attach APK to release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p build
+          cp android-stub/app/build/outputs/apk/debug/app-debug.apk build/elrs-dongle-stub.apk
+          gh release upload "${{ github.event.release.tag_name }}" build/elrs-dongle-stub.apk --clobber

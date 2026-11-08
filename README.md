@@ -34,7 +34,31 @@ ELRS TX module ──► TX backpack ──ESP-NOW──► ESP32-C3 dongle ─�
 
 Релизный workflow собирает merged-образ, публикует его на GitHub Pages и
 прикладывает к GitHub Release `firmware-merged.bin`, `SHA256SUMS` и
-`firmware.elf`.
+`firmware.elf`. Android-workflow прикладывает к тому же релизу
+`elrs-dongle-stub.apk`.
+
+## Установка Android-приложения
+
+После прошивки донгла установи приложение на смартфон. Готовый APK лежит в
+последнем GitHub Release:
+
+**https://github.com/voffmail/elrs-espnow-usb-dongle/releases/latest**
+
+Со смартфона:
+
+1. Открой ссылку в браузере телефона.
+2. В разделе **Assets** скачай `elrs-dongle-stub.apk`.
+3. Если Android попросит, разреши установку из браузера/неизвестного
+   источника.
+4. Открой скачанный APK и установи приложение.
+5. Подключи донгл через USB-OTG, открой приложение и разреши доступ к
+   USB-устройству.
+
+Прямая ссылка на APK:
+
+**https://github.com/voffmail/elrs-espnow-usb-dongle/releases/latest/download/elrs-dongle-stub.apk**
+
+Нужен Android 7.0+ с поддержкой USB Host (OTG).
 
 ## Возможности
 
