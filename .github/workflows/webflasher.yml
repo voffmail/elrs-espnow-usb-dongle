@@ -42,6 +42,7 @@ jobs:
 
       - name: Merge flash image
         run: |
+          PYTHON="$GITHUB_WORKSPACE/.toolchain/venv/bin/python"
           ESPTOOL="$GITHUB_WORKSPACE/.toolchain/platformio/packages/tool-esptoolpy/esptool.py"
           BUILD="$GITHUB_WORKSPACE/firmware/.pio/build/esp32-c3-usb"
           BOOT_APP0="$GITHUB_WORKSPACE/.toolchain/platformio/packages/framework-arduinoespressif32/tools/partitions/boot_app0.bin"
@@ -51,7 +52,7 @@ jobs:
           test -f "$BOOT_APP0"
           test -f "$BUILD/firmware.bin"
           mkdir -p build
-          python3 "$ESPTOOL" --chip esp32c3 merge_bin \
+          "$PYTHON" "$ESPTOOL" --chip esp32c3 merge_bin \
             -o build/firmware-merged.bin \
             --flash_mode dio --flash_freq 80m --flash_size 4MB \
             0x0 "$BUILD/bootloader.bin" \
