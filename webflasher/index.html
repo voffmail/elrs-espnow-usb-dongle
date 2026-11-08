@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ELRS ESP-NOW USB Dongle — Web Flasher</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body {
+      margin: 0;
+      font: 16px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: #f4f5f7;
+      color: #1d2330;
+    }
+    main { max-width: 760px; margin: 0 auto; padding: 40px 20px 64px; }
+    h1 { font-size: 1.9rem; line-height: 1.2; margin: 0 0 8px; }
+    h2 { font-size: 1.2rem; margin: 0 0 12px; }
+    .lead { color: #4a5366; margin: 0 0 24px; }
+    .card {
+      background: #fff; border: 1px solid #dfe3ea; border-radius: 14px;
+      padding: 24px; box-shadow: 0 8px 30px rgba(20, 30, 50, .06);
+      margin: 22px 0;
+    }
+    .version { font-size: .92rem; color: #4a5366; margin-bottom: 14px; }
+    .version b { color: #1d2330; }
+    esp-web-install-button { display: inline-block; }
+    esp-web-install-button button {
+      font: inherit; font-weight: 600; border: 0; border-radius: 10px;
+      padding: 12px 22px; color: #fff; background: #2563eb; cursor: pointer;
+    }
+    esp-web-install-button button:hover { background: #1d4ed8; }
+    .hint, .warn { font-size: .92rem; color: #5b6476; }
+    .warn { color: #9a3412; }
+    code { background: #eef1f6; padding: .1em .35em; border-radius: 4px; }
+    ol, ul { padding-left: 1.3em; }
+    li { margin: .35em 0; }
+    a { color: #1d4ed8; }
+    .muted { color: #6b7280; }
+    @media (prefers-color-scheme: dark) {
+      body { background: #11151c; color: #e6e9ef; }
+      .lead, .version, .hint { color: #aab2c0; }
+      .card { background: #1a202a; border-color: #2b3442; box-shadow: none; }
+      code { background: #27303d; }
+      a { color: #7aa7ff; }
+    }
+  </style>
+  <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
+</head>
+<body>
+<main>
+  <h1>ELRS ESP-NOW USB Dongle</h1>
+  <p class="lead">
+    Прошивка <strong>esp32-c3-usb</strong> — только для ESP32-C3 с native USB.
+    Не для DevKitM-1/CP2102N (<code>esp32-c3</code>).
+  </p>
+
+  <section class="card">
+    <div class="version">Версия: <b id="version">загрузка…</b></div>
+    <esp-web-install-button manifest="manifest.json">
+      <button slot="activate">Прошить донгл</button>
+      <span slot="unsupported">
+        Нужен Chrome или Edge на компьютере с поддержкой Web Serial.
+      </span>
+      <span slot="not-allowed">
+        Открой страницу по HTTPS (GitHub Pages) или на localhost.
+      </span>
+    </esp-web-install-button>
+    <p class="hint">
+      Прошивка стирает NVS: phrase/UID/канал нужно будет задать заново.
+      Скачать образ вручную: <a href="firmware-merged.bin">firmware-merged.bin</a>.
+    </p>
+    <p class="warn">
+      Перед прошивкой закрой ELRS Dongle Stub, монитор порта, PlatformIO и
+      serial_bridge.py — они могут держать порт.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Как прошить</h2>
+    <ol>
+      <li>Подключи донгл к компьютеру по USB.</li>
+      <li>Открой эту страницу в Chrome или Edge на компьютере.</li>
+      <li>Нажми <strong>«Прошить донгл»</strong> и выбери последовательный порт.</li>
+      <li>Подтверди стирание и дождись завершения. Донгл перезагрузится.</li>
+      <li>Настрой phrase/UID и target в Android-приложении или через
+        <code>tools/dongle_config.py</code>.</li>
+    </ol>
+    <p class="hint">
+      Web Serial не работает в мобильных браузерах. Если прошивка не
+      запускается, используй PlatformIO/esptool.
+    </p>
+  </section>
+
+  <p class="muted">
+    Исходники и документация — в репозитории проекта.
+  </p>
+</main>
+<script>
+  fetch('manifest.json', { cache: 'no-store' })
+    .then(function (r) { return r.json(); })
+    .then(function (m) { document.getElementById('version').textContent = m.version || '?'; })
+    .catch(function () { document.getElementById('version').textContent = 'неизвестно'; });
+</script>
+</body>
+</html>

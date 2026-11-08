@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+if [ ! -f "$ROOT/.toolchain/env.sh" ]; then
+    "$ROOT/scripts/setup-toolchain.sh"
+fi
+source "$ROOT/.toolchain/env.sh"
+exec pio "$@"

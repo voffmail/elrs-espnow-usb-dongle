@@ -1,0 +1,9 @@
+{
+  "name": "elrs_common",
+  "version": "0.1.0",
+  "description": "Shared UID, MSP v2, CRSF and dongle config protocol helpers",
+  "build": {
+    "srcDir": "src",
+    "includeDir": "include"
+  }
+}

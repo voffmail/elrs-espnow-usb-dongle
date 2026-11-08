@@ -1,0 +1,63 @@
+name: Build firmware
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache toolchain
+        uses: actions/cache@v4
+        with:
+          path: |
+            .toolchain
+            firmware/.pio
+            sim/.pio
+          key: pio-${{ runner.os }}-${{ hashFiles('firmware/platformio.ini') }}
+
+      - name: Set up toolchain
+        run: ./init.sh
+
+      - name: Build ESP32-C3 firmware (UART0)
+        run: ./tools/pio run -d firmware -e esp32-c3
+
+      - name: Build ESP32-C3 firmware (native USB)
+        run: ./tools/pio run -d firmware -e esp32-c3-usb
+
+      - name: Build ESP32-C3 firmware (native USB, LR)
+        run: ./tools/pio run -d firmware -e esp32-c3-usb-lr
+
+      - name: Build backpack simulator
+        run: ./tools/pio run -d sim -e esp32-c3
+
+      - name: Build backpack simulator (LR)
+        run: ./tools/pio run -d sim -e esp32-c3-lr
+
+      - name: Check Python tools
+        run: python3 -m py_compile tools/*.py
+
+      - name: Run host tests
+        run: python3 -m unittest discover -s tests
+
+      - name: Upload firmware
+        uses: actions/upload-artifact@v4
+        with:
+          name: elrs-espnow-usb-dongle-firmware
+          path: firmware/.pio/build/esp32-c3/firmware.bin
+          if-no-files-found: error

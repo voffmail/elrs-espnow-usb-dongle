@@ -1,0 +1,122 @@
+name: Build web flasher
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache toolchain
+        uses: actions/cache@v4
+        with:
+          path: |
+            .toolchain
+            firmware/.pio
+          key: webflasher-${{ runner.os }}-${{ hashFiles('firmware/platformio.ini') }}
+
+      - name: Set up toolchain
+        run: ./init.sh
+
+      - name: Build ESP32-C3 native-USB firmware
+        run: ./tools/pio run -d firmware -e esp32-c3-usb
+
+      - name: Merge flash image
+        run: |
+          ESPTOOL="$GITHUB_WORKSPACE/.toolchain/platformio/packages/tool-esptoolpy/esptool.py"
+          BUILD="$GITHUB_WORKSPACE/firmware/.pio/build/esp32-c3-usb"
+          BOOT_APP0="$GITHUB_WORKSPACE/.toolchain/platformio/packages/framework-arduinoespressif32/tools/partitions/boot_app0.bin"
+          test -f "$ESPTOOL"
+          test -f "$BUILD/bootloader.bin"
+          test -f "$BUILD/partitions.bin"
+          test -f "$BOOT_APP0"
+          test -f "$BUILD/firmware.bin"
+          mkdir -p build
+          python3 "$ESPTOOL" --chip esp32c3 merge_bin \
+            -o build/firmware-merged.bin \
+            --flash_mode dio --flash_freq 80m --flash_size 4MB \
+            0x0 "$BUILD/bootloader.bin" \
+            0x8000 "$BUILD/partitions.bin" \
+            0xe000 "$BOOT_APP0" \
+            0x10000 "$BUILD/firmware.bin"
+
+      - name: Assemble Pages site
+        run: |
+          if [ "${{ github.event_name }}" = "release" ]; then
+            VERSION="${{ github.event.release.tag_name }}"
+          else
+            VERSION="dev-${GITHUB_SHA::7}"
+          fi
+          python3 scripts/make_webflasher.py \
+            --version "$VERSION" \
+            --binary build/firmware-merged.bin \
+            --out site
+          python3 -m json.tool site/manifest.json >/dev/null
+          test -f site/firmware-merged.bin
+          test -f site/index.html
+
+      - name: Upload site artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: elrs-webflasher-site
+          path: site/
+          if-no-files-found: error
+
+      - name: Upload release assets
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BUILD="$GITHUB_WORKSPACE/firmware/.pio/build/esp32-c3-usb"
+          gh release upload "${{ github.event.release.tag_name }}" \
+            build/firmware-merged.bin \
+            site/SHA256SUMS \
+            "$BUILD/firmware.elf" \
+            --clobber
+
+  deploy:
+    if: github.event_name == 'release'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Download site artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: elrs-webflasher-site
+          path: site
+
+      # Pages must be enabled once in repository settings:
+      # Settings -> Pages -> Source: GitHub Actions.
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ELRS Dongle Stub</string>
+    <string name="title">ELRS ESP-NOW USB донгл</string>
+    <string name="phrase_hint">Бинд-фраза (пусто = factory MAC)</string>
+    <string name="channel_hint">Канал (расширенный; у бэкпака 1)</string>
+    <string name="manual_uid">Ручной UID (6 байт)</string>
+    <string name="uid_hint">UID (AA:BB:CC:DD:EE:FF или 12 hex)</string>
+    <string name="bad_uid">UID должен быть 6 байт (12 hex-цифр)</string>
+    <string name="uid_required">UID не должен быть нулевым</string>
+    <string name="target_hint">host:port (пусто = broadcast)</string>
+    <string name="start_stream">Запустить телеметрию</string>
+    <string name="stop_stream">Остановить телеметрию</string>
+
+    <string name="apply_config">Применить к донглу</string>
+    <string name="read_config">Прочитать конфиг</string>
+    <string name="reset_config">Сбросить конфиг</string>
+    <string name="apply_target">Применить</string>
+    <string name="bad_target">Укажи host:port или оставь пусто для broadcast</string>
+    <string name="target_broadcast">Включён broadcast</string>
+    <string name="no_device">Поддерживаемое USB-serial устройство не найдено. Подключите донгл через OTG.</string>
+    <string name="waiting_permission">Ожидание разрешения USB...</string>
+    <string name="bad_channel">Канал должен быть 1-13</string>
+    <string name="phrase_required">Нужна binding phrase; для очистки используйте «Сбросить конфиг»</string>
+    <string name="config_sending">Отправка конфига...</string>
+    <string name="bad_port">Порт должен быть 1-65535</string>
+    <string name="target_saved">Получатель сохранён: %1$s:%2$d</string>
+</resources>

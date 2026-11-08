@@ -1,0 +1,43 @@
+# Toolchain
+.toolchain/
+.pio/
+.pioenvs/
+.piolibdeps/
+
+# Build outputs
+firmware/.pio/
+firmware/build/
+android-stub/.gradle/
+android-stub/.kotlin/
+android-stub/**/build/
+android-stub/local.properties
+*.apk
+*.bin
+*.elf
+*.map
+
+# Secrets and local config
+firmware/include/secrets.h
+android-stub/local.properties
+*.key
+*.jks
+*.keystore
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Logs and captures
+logs/
+*.log
+testdata/*.jsonl
+
+# OS/IDE
+.DS_Store
+.idea/
+.vscode/
+
+# Generated web flasher site
+/site/
+/build/

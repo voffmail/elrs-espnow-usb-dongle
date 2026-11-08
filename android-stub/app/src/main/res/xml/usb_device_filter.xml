@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Silicon Labs CP210x (CP2102N on ESP32-C3-DevKitM-1). -->
+    <usb-device vendor-id="4292" />
+    <!-- Espressif native USB CDC (ESP32-C3/S3 boards without a UART bridge). -->
+    <usb-device vendor-id="12346" />
+</resources>

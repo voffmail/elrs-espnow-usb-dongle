@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ELRS Dongle Stub</string>
+    <string name="title">ELRS ESP-NOW USB dongle</string>
+    <string name="phrase_hint">Binding phrase (empty = factory MAC)</string>
+    <string name="channel_hint">Channel (advanced; backpack uses 1)</string>
+    <string name="manual_uid">Manual UID (6 bytes)</string>
+    <string name="uid_hint">UID (AA:BB:CC:DD:EE:FF or 12 hex)</string>
+    <string name="bad_uid">UID must be 6 bytes (12 hex digits)</string>
+    <string name="uid_required">UID must not be all zero</string>
+    <string name="target_hint">host:port (empty = broadcast)</string>
+    <string name="start_stream">Start telemetry</string>
+    <string name="stop_stream">Stop telemetry</string>
+
+    <string name="apply_config">Apply to dongle</string>
+    <string name="read_config">Read config</string>
+    <string name="reset_config">Reset config</string>
+    <string name="apply_target">Apply</string>
+    <string name="bad_target">Use host:port or leave empty for broadcast</string>
+    <string name="target_broadcast">Broadcast enabled</string>
+    <string name="no_device">No supported USB serial device. Connect the dongle via OTG.</string>
+    <string name="waiting_permission">Waiting for USB permission...</string>
+    <string name="bad_channel">Channel must be 1-13</string>
+    <string name="phrase_required">Binding phrase is required; use Reset to clear</string>
+    <string name="config_sending">Sending config...</string>
+    <string name="bad_port">Port must be 1-65535</string>
+    <string name="target_saved">Target saved: %1$s:%2$d</string>
+</resources>
