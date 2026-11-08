@@ -79,6 +79,11 @@ ELRS TX module ──► TX backpack ──ESP-NOW──► ESP32-C3 dongle ─�
 **По умолчанию — `esp32-c3-usb`**: native USB C3, без пайки, используется
 штатный USB-разъём платы.
 
+<img src="docs/esp32c3.png" alt="ESP32-C3 Super Mini" width="420">
+
+Плата: **ESP32-C3 Super Mini**. Ищется на AliExpress по запросу
+**«Esp32 c3 super mini»**, цена около **$1.5**.
+
 | Прошивка | Плата | Данные | USB на ПК |
 |---|---|---|---|
 | `esp32-c3-usb` | native-USB C3 | `Serial` (USB CDC) | `/dev/ttyACM*`, VID:PID `303A:1001` |
